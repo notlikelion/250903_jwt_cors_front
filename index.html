@@ -17,5 +17,33 @@
       <button id="logoutBtn">로그아웃</button>
     </section>
     <p id="result">API 응답 표시</p>
+
+    <script>
+      const loginForm = document.querySelector("#loginForm");
+
+      const API_BASE_URL = "http://localhost:8080";
+
+      loginForm.addEventListener("submit", async (event) => {
+        event.preventDefault(); // 폼 기본동작 -> 링크처리
+        const username = document.querySelector("#username").value;
+        const password = document.querySelector("#password").value;
+        const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ username, password }),
+        });
+        if (!response.ok) {
+          alert("로그인 실패!");
+          throw new Error("로그인 실패");
+        }
+        const data = await response.json(); // JSON -> 객체로 변환
+        const { accessToken } = data;
+
+        localStorage.setItem("accessToken", accessToken);
+        alert("로그인 성공!");
+      });
+    </script>
   </body>
 </html>
