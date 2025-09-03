@@ -44,6 +44,33 @@
         localStorage.setItem("accessToken", accessToken);
         alert("로그인 성공!");
       });
+
+      // 데이터 가져오기 -> fetch -> JWT '포함해서' 호출
+      const dataLoadBtn = document.querySelector("#dataLoadBtn");
+      const result = document.querySelector("#result");
+      dataLoadBtn.addEventListener("click", async (event) => {
+        const response = await fetch(`${API_BASE_URL}/api/auth/data`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            // localStorage -> 토큰을 읽어들여와서 -> header에 담아서 호출
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        });
+        if (!response.ok) {
+          alert("요청 실패! 로그인 여부나 네트워크를 확인하세요!");
+        }
+        const data = await response.text();
+        result.textContent = data;
+      });
+
+      // 로그아웃 -> localStorage 지우기.
+      const logoutBtn = document.querySelector("#logoutBtn");
+      logoutBtn.addEventListener("click", () => {
+        // localStorage.clear();
+        localStorage.removeItem("accessToken");
+        alert("로그아웃 되었습니다!");
+      });
     </script>
   </body>
 </html>
